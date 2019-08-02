@@ -1,9 +1,7 @@
 //
 //  NSArray+HXAdditions.m
-//  HXFundManager
 //
 //  Created by 柯浩然 on 2019/7/25.
-//  Copyright © 2019 China Asset Management Co., Ltd. All rights reserved.
 //
 
 #import "NSArray+FMAdditions.h"
