@@ -4,15 +4,41 @@
 //  Created by 柯浩然 on 2019/7/25.
 //
 
-#import "NSArray+FMAdditions.h"
-
+#import "NSArray+HXAdditions.h"
+#import "Masonry.h"
 @implementation NSArray (HXAdditions)
-- (void)hx_distributeViewsWithFixedSpacing:(CGFloat)fixedSpacing leadSpacing:(CGFloat)leadSpacing tailSpacing:(CGFloat)tailSpacing {
-    
-   __block UIView *lastView = nil;
-    MAS_VIEW *tempSuperView = [self mas_commonSuperviewOfViews];
 
+- (void)hx_distributeViewsWithFixedSpacing:(CGFloat)fixedSpacing leadSpacing:(CGFloat)leadSpacing tailSpacing:(CGFloat)tailSpacing {
+    [self hx_distributeViewsWithFixedLength:0 topSpacing:0 fixedSpacing:fixedSpacing leadSpacing:leadSpacing tailSpacing:tailSpacing];
+}
+    
+- (void)hx_distributeViewsWithFixedLength:(CGFloat)fixedLength topSpacing:(CGFloat)topSpacing fixedSpacing:(CGFloat)fixedSpacing leadSpacing:(CGFloat)leadSpacing tailSpacing:(CGFloat)tailSpacing {
+   
+    if (self.count < 2) {
+        NSAssert(self.count>1,@"views to distribute need to bigger than one");
+        return;
+    }
+    
+    BOOL shouldNewRow = fixedLength>0;
+    
+    __block UIView *lastView = nil;
+    __block CGFloat currentWidth = 0;
+    __block UIView *lastRowFirstView = nil;
+    MAS_VIEW *tempSuperView = [self mas_commonSuperviewOfViews];
     [self enumerateObjectsUsingBlock:^(UIView *view, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        CGFloat viewWidth = [view sizeThatFits:CGSizeZero].width;
+    
+        currentWidth += viewWidth;
+        NSLog(@"viewWidth = %f currentWidth = %f",viewWidth,currentWidth);
+        BOOL scaleOut = shouldNewRow && viewWidth > fixedLength;
+        BOOL newRow = shouldNewRow && ( scaleOut || currentWidth>fixedLength);
+        
+        if (newRow) {
+            lastView = nil;
+            currentWidth = viewWidth;
+        }
+        currentWidth += fixedSpacing;
         
         [view mas_makeConstraints:^(MASConstraintMaker *make) {
             
@@ -22,12 +48,34 @@
             }else {
                 make.leading.equalTo(lastView.mas_trailing).offset(fixedSpacing);
             }
-            if (idx == self.count - 1) {//last one
-                make.trailing.equalTo(tempSuperView).offset(-tailSpacing);
+            
+            if (lastView) {
+                make.top.equalTo(lastView);
+            }else if (newRow && lastRowFirstView) {
+                make.top.equalTo(lastRowFirstView.mas_bottom).offset(topSpacing);
+            }else {
+                make.top.equalTo(@0);
             }
-            make.top.bottom.equalTo(@0);
+            
+            if (scaleOut) {
+                make.trailing.mas_equalTo(tempSuperView);
+            }else if(idx == self.count-1 && !shouldNewRow){
+                make.trailing.mas_equalTo(tempSuperView);
+            }
+            
+            if (idx == self.count-1) {
+                make.bottom.equalTo(@0);
+            }
         }];
         
+        if (newRow) {
+            newRow = NO;
+            lastRowFirstView = view;
+        }
+        
+        if (!lastRowFirstView) {
+            lastRowFirstView = view;
+        }
         lastView = view;
     }];
 }

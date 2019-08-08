@@ -1,3 +1,3 @@
 # NSArray+HXAdditions
-1.可以使用hx_distributeViewsWithFixedSpacing实现对不同高度的view进行排列布局。参考Mesonry
+1.可以对不同宽度的View进行布局，宽度不够时支持换行。需要引入Mesonry
 2.可以使用filter 和 map 函数对数组进行过滤和映射
