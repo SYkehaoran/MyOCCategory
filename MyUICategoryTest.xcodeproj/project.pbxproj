@@ -130,6 +130,7 @@
 				A677021322FBF37300895798 /* ViewController.h */,
 				A677021422FBF37300895798 /* ViewController.m */,
 				A677021622FBF37300895798 /* Main.storyboard */,
+				A677024622FC2D8700895798 /* MyUICategoryTest-Bridging-Header.h */,
 				A677021922FBF37500895798 /* Assets.xcassets */,
 				A677021B22FBF37500895798 /* LaunchScreen.storyboard */,
 				A677021E22FBF37500895798 /* Info.plist */,
@@ -162,7 +163,6 @@
 				A677024922FC310D00895798 /* NSArray+HXAdditions.h */,
 				A677024A22FC310D00895798 /* NSArray+HXAdditions.m */,
 				A677024722FC2D8800895798 /* HXLabel.swift */,
-				A677024622FC2D8700895798 /* MyUICategoryTest-Bridging-Header.h */,
 			);
 			path = Class;
 			sourceTree = "<group>";
